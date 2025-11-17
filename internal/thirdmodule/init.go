@@ -1,4 +1,4 @@
-package data
+package thirdmodule
 
 import (
 	"github.com/go-kratos/kratos-layout/internal/conf"
@@ -8,17 +8,20 @@ import (
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewGreeterRepo)
+var ProviderSet = wire.NewSet(NewModule)
 
 // Data .
-type Data struct {
+type Module struct {
+	logger *log.Helper
 	// TODO wrapped database client
 }
 
 // NewData .
-func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
+func NewModule(c *conf.Data, logger log.Logger) (*Module, func(), error) {
 	cleanup := func() {
 		log.NewHelper(logger).Info("closing the data resources")
 	}
-	return &Data{}, cleanup, nil
+	return &Module{
+		logger: log.NewHelper(logger),
+	}, cleanup, nil
 }
