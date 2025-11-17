@@ -17,9 +17,8 @@ func NewGRPCServer(c *conf.Server, thirdModule *thirdmodule.Module, greeter *ser
 	var opts = []grpc.ServerOption{
 		grpc.Middleware(
 			recovery.Recovery(),
-			//middleware.Metadata(),
+			middleware.Metadata(),
 			middleware.Log(logger),
-			//mi
 		),
 	}
 	if c.Grpc.Network != "" {

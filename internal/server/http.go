@@ -17,7 +17,8 @@ func NewHTTPServer(c *conf.Server, thirdModule *thirdmodule.Module, greeter *ser
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),
-			//middleware.Metadata(),
+			middleware.Metadata(),
+			middleware.HttpClientIp(),
 			middleware.Log(logger),
 		),
 	}
