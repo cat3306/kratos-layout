@@ -3,14 +3,14 @@ package service
 import (
 	"context"
 
-	v1 "github.com/go-kratos/kratos-layout/api/service/v1"
+	v1 "github.com/go-kratos/kratos-layout/api/server/v1"
 	"github.com/go-kratos/kratos-layout/internal/thirdmodule"
 	"github.com/go-kratos/kratos/v2/log"
 )
 
 // GreeterService is a greeter service.
 type Service struct {
-	v1.UnimplementedGreeterServer
+	v1.UnimplementedServerServer
 	thirdModule *thirdmodule.Module
 	logger      log.Logger
 }

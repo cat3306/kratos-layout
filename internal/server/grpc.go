@@ -1,7 +1,7 @@
 package server
 
 import (
-	v1 "github.com/go-kratos/kratos-layout/api/service/v1"
+	v1 "github.com/go-kratos/kratos-layout/api/server/v1"
 	"github.com/go-kratos/kratos-layout/internal/conf"
 	"github.com/go-kratos/kratos-layout/internal/middleware"
 	"github.com/go-kratos/kratos-layout/internal/service"
@@ -32,6 +32,6 @@ func NewGRPCServer(c *conf.Server, thirdModule *thirdmodule.Module, greeter *ser
 		opts = append(opts, grpc.Timeout(c.Grpc.Timeout.AsDuration()))
 	}
 	srv := grpc.NewServer(opts...)
-	v1.RegisterGreeterServer(srv, greeter)
+	v1.RegisterServerServer(srv, greeter)
 	return srv
 }

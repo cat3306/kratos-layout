@@ -1,7 +1,7 @@
 package server
 
 import (
-	v1 "github.com/go-kratos/kratos-layout/api/service/v1"
+	v1 "github.com/go-kratos/kratos-layout/api/server/v1"
 	"github.com/go-kratos/kratos-layout/internal/conf"
 	"github.com/go-kratos/kratos-layout/internal/middleware"
 	"github.com/go-kratos/kratos-layout/internal/service"
@@ -32,6 +32,6 @@ func NewHTTPServer(c *conf.Server, thirdModule *thirdmodule.Module, greeter *ser
 		opts = append(opts, http.Timeout(c.Http.Timeout.AsDuration()))
 	}
 	srv := http.NewServer(opts...)
-	v1.RegisterGreeterHTTPServer(srv, greeter)
+	v1.RegisterServerHTTPServer(srv, greeter)
 	return srv
 }
