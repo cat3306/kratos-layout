@@ -27,9 +27,9 @@ func wireApp(confServer *conf.Server, data *conf.Data, logger log.Logger) (*krat
 	if err != nil {
 		return nil, nil, err
 	}
-	greeterService := service.NewGreeterService(module, logger)
-	grpcServer := server.NewGRPCServer(confServer, module, greeterService, logger)
-	httpServer := server.NewHTTPServer(confServer, module, greeterService, logger)
+	serviceService := service.NewService(module, logger)
+	grpcServer := server.NewGRPCServer(confServer, module, serviceService, logger)
+	httpServer := server.NewHTTPServer(confServer, module, serviceService, logger)
 	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {
 		cleanup()
