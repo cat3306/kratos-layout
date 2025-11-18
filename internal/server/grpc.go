@@ -18,6 +18,7 @@ func NewGRPCServer(c *conf.Server, thirdModule *thirdmodule.Module, greeter *ser
 		grpc.Middleware(
 			recovery.Recovery(),
 			middleware.Metadata(),
+			middleware.GrpcClientIp(),
 			middleware.Log(logger),
 		),
 	}

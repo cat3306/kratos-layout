@@ -18,7 +18,7 @@ const (
 func Metadata() middleware.Middleware {
 	return func(h middleware.Handler) middleware.Handler {
 		return func(ctx context.Context, req any) (any, error) {
-			md := make(map[string]string)
+			md := extractMetadata(ctx)
 			md[RequestIdMetaKey] = generateRequestID()
 			ctx = context.WithValue(ctx, MetadataKey{}, md)
 			return h(ctx, req)
