@@ -8,6 +8,7 @@ import (
 	"github.com/go-kratos/kratos-layout/internal/thirdmodule"
 
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v2/middleware/metadata"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 )
@@ -17,7 +18,8 @@ func NewGRPCServer(c *conf.Server, thirdModule *thirdmodule.Module, greeter *ser
 	var opts = []grpc.ServerOption{
 		grpc.Middleware(
 			recovery.Recovery(),
-			middleware.Metadata(),
+			metadata.Server(),
+			middleware.RequestId(),
 			middleware.GrpcClientIp(),
 			middleware.Log(logger),
 		),

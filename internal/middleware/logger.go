@@ -8,6 +8,7 @@ import (
 
 	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/go-kratos/kratos/v2/metadata"
 	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/go-kratos/kratos/v2/transport"
 )
@@ -38,18 +39,24 @@ func Log(logger log.Logger) middleware.Middleware {
 				code = se.Code
 				reason = se.Reason
 			}
+
 			formatMetadata := func() string {
-				metadata := extractMetadata(ctx)
-				str := strings.Builder{}
-				cnt := 0
-				for k, v := range metadata {
-					str.WriteString(fmt.Sprintf("%s:%s", k, v))
-					cnt++
-					if cnt < len(metadata) {
-						str.WriteString(" ")
+				if md, ok := metadata.FromServerContext(ctx); ok {
+					str := strings.Builder{}
+					cnt := 0
+					for k, v := range md {
+						if len(v) == 0 {
+							continue
+						}
+						str.WriteString(fmt.Sprintf("%s:%s", k[:], v[0]))
+						cnt++
+						if cnt < len(md) {
+							str.WriteString(" ")
+						}
 					}
+					return str.String()
 				}
-				return str.String()
+				return ""
 			}
 			level, stack := extractError(err)
 			log.NewHelper(log.WithContext(ctx, logger)).Log(level,

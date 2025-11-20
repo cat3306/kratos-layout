@@ -5,21 +5,22 @@ import (
 	"net"
 	"strings"
 
+	"github.com/go-kratos/kratos/v2/metadata"
 	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"google.golang.org/grpc/peer"
 )
 
 const (
-	IpMetaKey = "ip"
+	ClientIpMetaKey = "x-md-global-clientip"
 )
 
 func HttpClientIp() middleware.Middleware {
 	return func(h middleware.Handler) middleware.Handler {
 		return func(ctx context.Context, req any) (any, error) {
-			meta := extractMetadata(ctx)
-			meta[IpMetaKey] = httpTransportClientIP(ctx)
-			ctx = context.WithValue(ctx, MetadataKey{}, meta)
+			if md, ok := metadata.FromServerContext(ctx); ok {
+				md.Set(ClientIpMetaKey, httpTransportClientIP(ctx))
+			}
 			return h(ctx, req)
 		}
 	}
@@ -28,9 +29,9 @@ func HttpClientIp() middleware.Middleware {
 func GrpcClientIp() middleware.Middleware {
 	return func(h middleware.Handler) middleware.Handler {
 		return func(ctx context.Context, req any) (any, error) {
-			meta := extractMetadata(ctx)
-			meta[IpMetaKey] = grpcTransportClientIP(ctx)
-			ctx = context.WithValue(ctx, MetadataKey{}, meta)
+			if md, ok := metadata.FromServerContext(ctx); ok {
+				md.Set(ClientIpMetaKey, grpcTransportClientIP(ctx))
+			}
 			return h(ctx, req)
 		}
 	}
