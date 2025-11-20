@@ -2,7 +2,6 @@ package thirdmodule
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/go-kratos/kratos-layout/internal/conf"
@@ -10,7 +9,6 @@ import (
 )
 
 func initRedis(config *conf.Data_Redis) (*redis.Client, error) {
-	fmt.Println(config.WriteTimeout.AsDuration())
 	client := redis.NewClient(&redis.Options{
 		Addr:         config.Addr,
 		Network:      config.Network,
