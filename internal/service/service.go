@@ -23,6 +23,7 @@ func NewService(thirdModule *thirdmodule.Module, logger log.Logger) *Service {
 // SayHello implements helloworld.GreeterServer.
 func (s *Service) SayHello(ctx context.Context, in *v1.HelloRequest) (*v1.HelloReply, error) {
 	//TODO logic here
-	//s.logger.WithContext(ctx).Infof("SayHello Received: %v", in.Name)
+	//s.thirdModule.RDB().Set(ctx, "key", "value", 0)
+	//s.thirdModule.Ent().Foo.Query().Limit(1).Count(ctx)
 	return &v1.HelloReply{Message: "Hello " + in.Name}, nil
 }

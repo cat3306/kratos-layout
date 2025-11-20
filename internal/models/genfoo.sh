@@ -1,0 +1,1 @@
+ent new Foo
