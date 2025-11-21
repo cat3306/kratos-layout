@@ -4,6 +4,7 @@ go 1.23.2
 
 require (
 	entgo.io/ent v0.14.2
+	github.com/envoyproxy/protoc-gen-validate v1.0.4
 	github.com/go-kratos/kratos/v2 v2.8.0
 	github.com/go-sql-driver/mysql v1.9.0
 	github.com/google/uuid v1.6.0
