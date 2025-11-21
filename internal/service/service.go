@@ -1,29 +1,23 @@
 package service
 
 import (
-	"context"
-
 	v1 "github.com/go-kratos/kratos-layout/api/server/v1"
+	"github.com/go-kratos/kratos-layout/internal/middleware"
 	"github.com/go-kratos/kratos-layout/internal/thirdmodule"
 	"github.com/go-kratos/kratos/v2/log"
 )
 
-// GreeterService is a greeter service.
 type Service struct {
 	v1.UnimplementedServerServer
 	thirdModule *thirdmodule.Module
-	logger      log.Logger
+	logger      *log.Helper
 }
 
-// NewGreeterService new a greeter service.
 func NewService(thirdModule *thirdmodule.Module, logger log.Logger) *Service {
-	return &Service{thirdModule: thirdModule, logger: logger}
-}
-
-// SayHello implements helloworld.GreeterServer.
-func (s *Service) SayHello(ctx context.Context, in *v1.HelloRequest) (*v1.HelloReply, error) {
-	//TODO logic here
-	//s.thirdModule.RDB().Set(ctx, "key", "value", 0)
-	//s.thirdModule.Ent().Foo.Query().Limit(1).Count(ctx)
-	return &v1.HelloReply{Message: "Hello " + in.Name}, nil
+	return &Service{thirdModule: thirdModule, logger: log.NewHelper(
+		log.With(logger,
+			"metadata",
+			middleware.MetadataLog(map[string]bool{
+				middleware.RequestIdMetaKey: true,
+			})))}
 }

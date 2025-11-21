@@ -13,6 +13,13 @@ import (
 	"github.com/go-kratos/kratos/v2/transport"
 )
 
+var (
+	LogMetadataKeys = map[string]string{
+		ClientIpMetaKey:  "clientip",
+		RequestIdMetaKey: "reqid",
+	}
+)
+
 func extractError(err error) (log.Level, string) {
 	if err != nil {
 		return log.LevelError, fmt.Sprintf("%+v", err)
@@ -39,25 +46,6 @@ func Log(logger log.Logger) middleware.Middleware {
 				code = se.Code
 				reason = se.Reason
 			}
-
-			formatMetadata := func() string {
-				if md, ok := metadata.FromServerContext(ctx); ok {
-					str := strings.Builder{}
-					cnt := 0
-					for k, v := range md {
-						if len(v) == 0 {
-							continue
-						}
-						str.WriteString(fmt.Sprintf("%s:%s", k[:], v[0]))
-						cnt++
-						if cnt < len(md) {
-							str.WriteString(" ")
-						}
-					}
-					return str.String()
-				}
-				return ""
-			}
 			level, stack := extractError(err)
 			log.NewHelper(log.WithContext(ctx, logger)).Log(level,
 				"proto", transportKind,
@@ -67,7 +55,7 @@ func Log(logger log.Logger) middleware.Middleware {
 				"reason", reason,
 				"stack", stack,
 				"latency", time.Since(startTime),
-				"metadata", formatMetadata(),
+				"metadata", MetadataLog(nil)(ctx),
 			)
 			return
 		}
@@ -86,4 +74,38 @@ func extractArgs(req any) string {
 
 type Redacter interface {
 	Redact() string
+}
+
+func MetadataLog(set map[string]bool) log.Valuer {
+	return func(ctx context.Context) any {
+
+		formatMetadata := func() string {
+			if md, ok := metadata.FromServerContext(ctx); ok {
+				str := strings.Builder{}
+				cnt := 0
+				plen := len(md)
+				if len(set) != 0 {
+					plen = len(set)
+				}
+
+				for k, v := range md {
+					if len(v) == 0 {
+						continue
+					}
+					if set != nil && !set[k] {
+						continue
+					}
+					k = LogMetadataKeys[k]
+					fmt.Fprintf(&str, "%s:%s", k, v[0])
+					cnt++
+					if cnt < plen {
+						str.WriteString(" ")
+					}
+				}
+				return str.String()
+			}
+			return ""
+		}
+		return formatMetadata()
+	}
 }
