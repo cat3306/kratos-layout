@@ -2,6 +2,7 @@ package thirdmodule
 
 import (
 	"github.com/go-kratos/kratos-layout/internal/conf"
+	"github.com/go-kratos/kratos-layout/internal/middleware"
 	"github.com/go-kratos/kratos-layout/internal/models/ent"
 	"github.com/redis/go-redis/v9"
 
@@ -12,7 +13,7 @@ import (
 // ProviderSet is data providers.
 var ProviderSet = wire.NewSet(NewModule)
 
-// Data .
+// Module .
 type Module struct {
 	logger *log.Helper
 	config *conf.Data
@@ -20,7 +21,7 @@ type Module struct {
 	rdb    *redis.Client
 }
 
-// NewData .
+// NewModule .
 func NewModule(c *conf.Data, logger log.Logger) (*Module, func(), error) {
 	entClient, err := initEnt(c.GetDatabase())
 	if err != nil {
@@ -34,9 +35,14 @@ func NewModule(c *conf.Data, logger log.Logger) (*Module, func(), error) {
 		entClient.Close()
 		rdb.Close()
 	}
-
+	lg := log.NewHelper(
+		log.With(logger,
+			"metadata",
+			middleware.MetadataLog(map[string]bool{
+				middleware.RequestIdMetaKey: true,
+			})))
 	return &Module{
-		logger: log.NewHelper(logger),
+		logger: lg,
 		config: c,
 		ent:    entClient,
 		rdb:    rdb,
