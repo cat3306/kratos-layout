@@ -8,7 +8,7 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-func initRedis(config *conf.Data_Redis) (*redis.Client, error) {
+func initRedis(config *conf.ThirdModule_Redis) (*redis.Client, error) {
 	client := redis.NewClient(&redis.Options{
 		Addr:         config.Addr,
 		Network:      config.Network,

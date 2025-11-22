@@ -11,6 +11,7 @@ import (
 	"github.com/go-kratos/kratos-layout/internal/server"
 	"github.com/go-kratos/kratos-layout/internal/service"
 	"github.com/go-kratos/kratos-layout/internal/thirdmodule"
+	"github.com/go-kratos/kratos-layout/internal/thirdservice"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
 )
@@ -22,12 +23,13 @@ import (
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(confServer *conf.Server, data *conf.Data, logger log.Logger) (*kratos.App, func(), error) {
-	module, cleanup, err := thirdmodule.NewModule(data, logger)
+func wireApp(confServer *conf.Server, thirdModule *conf.ThirdModule, thirdService *conf.ThirdService, logger log.Logger) (*kratos.App, func(), error) {
+	module, cleanup, err := thirdmodule.NewModule(thirdModule, logger)
 	if err != nil {
 		return nil, nil, err
 	}
-	serviceService := service.NewService(module, logger)
+	thirdserviceThirdService := thirdservice.NewService(thirdService, logger)
+	serviceService := service.NewService(module, logger, thirdserviceThirdService)
 	grpcServer := server.NewGRPCServer(confServer, module, serviceService, logger)
 	httpServer := server.NewHTTPServer(confServer, module, serviceService, logger)
 	app := newApp(logger, grpcServer, httpServer)

@@ -6,7 +6,7 @@ server:
   grpc:
     addr: 0.0.0.0:9000
     timeout: 1s
-data:
+third_module:
   database:
     driver: mysql
     source: root:12345678@tcp(127.0.0.1:3306)/cat13?parseTime=True&loc=Local
@@ -20,3 +20,4 @@ data:
     write_timeout: 0.2s
     password: "facai888"
     db: 0
+third_service: {}

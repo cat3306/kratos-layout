@@ -7,9 +7,10 @@ import "google/protobuf/duration.proto";
 
 message Bootstrap {
   Server server = 1;
-  Data data = 2;
+  ThirdModule third_module = 2;
+  ThirdService third_service = 3;
 }
-
+message ThirdService {}
 message Server {
   message HTTP {
     string network = 1;
@@ -26,7 +27,7 @@ message Server {
   string name = 3;
 }
 
-message Data {
+message ThirdModule {
   message Database {
     string driver = 1;
     string source = 2;

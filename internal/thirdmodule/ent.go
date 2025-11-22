@@ -12,7 +12,7 @@ import (
 	// _ "github.com/lib/pq"
 )
 
-func initEnt(config *conf.Data_Database) (*ent.Client, error) {
+func initEnt(config *conf.ThirdModule_Database) (*ent.Client, error) {
 	db, err := sql.Open(config.Driver, config.Source)
 	if err != nil {
 		return nil, err

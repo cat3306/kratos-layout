@@ -16,13 +16,13 @@ var ProviderSet = wire.NewSet(NewModule)
 // Module .
 type Module struct {
 	logger *log.Helper
-	config *conf.Data
+	config *conf.ThirdModule
 	ent    *ent.Client
 	rdb    *redis.Client
 }
 
 // NewModule .
-func NewModule(c *conf.Data, logger log.Logger) (*Module, func(), error) {
+func NewModule(c *conf.ThirdModule, logger log.Logger) (*Module, func(), error) {
 	entClient, err := initEnt(c.GetDatabase())
 	if err != nil {
 		panic(err)
